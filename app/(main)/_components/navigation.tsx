@@ -23,6 +23,7 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover'
 import { useSearch } from '@/hooks/use-search'
+import { useSettings } from '@/hooks/use-settings'
 import DocumentList from './document-list'
 import { Item } from './item'
 import TrashBox from './trash-box'
@@ -31,6 +32,7 @@ import UserItem from './user-item'
 const Navigation = () => {
 	const router = useRouter()
 	const search = useSearch()
+	const settings = useSettings()
 	const pathname = usePathname()
 	const params = useParams()
 	const create = useMutation(api.documents.create)
@@ -150,7 +152,7 @@ const Navigation = () => {
 				<div>
 					<UserItem />
 					<Item label='Search' icon={Search} isSearch onClick={search.onOpen} />
-					<Item label='Settings' icon={Settings} onClick={() => {}} />
+					<Item label='Settings' icon={Settings} onClick={settings.onOpen} />
 					<Item label='New Page' icon={PlusCircle} onClick={handleCreate} />
 				</div>
 				<div className='mt-4'>
