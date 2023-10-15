@@ -18,6 +18,7 @@ import {
 	ChevronRight,
 	LucideIcon,
 	MoreHorizontal,
+	Plus,
 	Trash,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -51,6 +52,20 @@ export const Item = ({
 	const { user } = useUser()
 	const router = useRouter()
 	const create = useMutation(api.documents.create)
+	const archive = useMutation(api.documents.archive)
+
+	const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		event.stopPropagation()
+		if (!id) return
+
+		const promise = archive({ id }).then(() => router.push('/documents'))
+
+		toast.promise(promise, {
+			loading: 'Moving to trash...',
+			success: 'Note moved to trash!',
+			error: 'Failed to archive note,.',
+		})
+	}
 
 	const handleExpand = (
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -67,7 +82,7 @@ export const Item = ({
 				if (!expanded) {
 					onExpand?.()
 				}
-				router.push(`/documents/${documentId}`)
+				// router.push(`/documents/${documentId}`)
 			}
 		)
 
@@ -79,7 +94,7 @@ export const Item = ({
 	}
 
 	const ChevronIcon = expanded ? ChevronDown : ChevronRight
-	// const archive = useMutation(api.documents.archive)
+
 	return (
 		<div
 			onClick={onClick}
@@ -123,7 +138,7 @@ export const Item = ({
 							align='start'
 							side='right'
 							forceMount>
-							<DropdownMenuItem onClick={() => {}}>
+							<DropdownMenuItem onClick={onArchive}>
 								<Trash className='h-4 w-4 mr-2' />
 								Delete
 							</DropdownMenuItem>
@@ -133,7 +148,12 @@ export const Item = ({
 							</div>
 						</DropdownMenuContent>
 					</DropdownMenu>
-					<div className='' role='button' onClick={onCreate}></div>
+					<div
+						className='opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600'
+						role='button'
+						onClick={onCreate}>
+						<Plus className='h-4 w-4 text-muted-foreground' />
+					</div>
 				</div>
 			)}
 		</div>
